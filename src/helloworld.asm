@@ -24,4 +24,4 @@ loop        lda .string,x
             jmp loop
 exit        rts
 
-.string     !scr "Hello World", 0
+.string     !scr "hello world", 0

@@ -1,5 +1,5 @@
 !cpu m65
-!to "./build/hires2.prg", cbm
+!to "./build/hires.prg", cbm
 !src "src/includes/m65macros.asm"
 
 
@@ -113,7 +113,7 @@ clear
         ldx #32                            ;Schleifenzähler 32 Pages (32 * 256 = 8192 = 8KB)
         ldy #0                             ;Schleifenzähler für 256 BYTES je Page
         
-        lda #$13                           ;Akku auf 0 setzen
+        lda #$00                           ;Akku auf 0 setzen
 .loop   sta (ZP_HELP_ADR),Y                ;Akku 'ausgeben'
         dey                                ;Y verringern
         bne .loop                          ;solange größer 0 nochmal -> .loop
