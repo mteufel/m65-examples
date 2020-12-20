@@ -1,3 +1,7 @@
+**20-12-2020**
+
+Examples for Hires Bitmaps in 65 Mode.
+You can paint pictures with Just Pixel and bring it to screen!
 
 **12-12-2020**
 
