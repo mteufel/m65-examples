@@ -1,5 +1,5 @@
 !cpu m65
-!to "./build/hires.prg", cbm
+!to "./build/hires-bitmap.prg", cbm
 !src "src/includes/m65macros.asm"
 
 
@@ -9,6 +9,14 @@ VIC_SCREEN_RAM            = $4800
 
         +basicStarter
 
+        ; This examples show how to load a picture painted and downloaded with "Just Pixel"
+        ; Just Pixel is available at: https://mteufel-github-io.vercel.app/
+        ; This program is meant to be run on a MEGA65 in 65 Mode!
+
+        *=$6000
+        !bin "./src/hires-bitmap.bin"  
+        *=$4800
+        !bin "./src/hires-colors.bin"  
 
         ; =================================================================================================
         ; Start
@@ -70,6 +78,7 @@ VIC_SCREEN_RAM            = $4800
         ;  Select the start of the bitmap memory
         ; --------------------------------------------------------------------------------------------------
         
+        
         ; the selected bank has 16kb and is divided into 2 8kb blocks
         ; bit 3 of $d018 defines which of the bitmap areas will be used
 
@@ -78,6 +87,7 @@ VIC_SCREEN_RAM            = $4800
         ;     |   | Bank 0             Bank 1           ...
         ; %0  | 0 | $0000-$1FFF        $4000-$5FFF
         ; %1  | 1 | $2000-$3FFF        $6000-$7FFF
+
 
         lda $d018
         ;bit  76543210
@@ -96,76 +106,27 @@ VIC_SCREEN_RAM            = $4800
         ; ------+---+----------------------------
         ; %0000 | 0  | $0000
         ; %0001 | 1  | $0400
-        ; %0010 | 2  | $0800    
-        ; %0011 | 3  | $0C00                
-        ; %0100 | 4  | $1000        
-        ; %0101 | 5  | $1400                
-        ; %0110 | 6  | $1800        
-        ; %0111 | 7  | $1C00
-        ; %1000 | 8  | $2000
-        ; %1001 | 9  | $2400        
-        ; %1010 | 10 | $2800        
-        ; %1011 | 11 | $2C00                
-        ; %1100 | 12 | $3000        
-        ; %1101 | 13 | $3400                
-        ; %1110 | 14 | $3800        
-        ; %1111 | 15 | $3C00                
-
-
-        lda $d018
-        ;bit  76543210
-        and #%11111111                   
-        ora #%00100000                   ; putting 0010 in bits 7-3 means the screen memory starts at $4800   
+        ; %0010 | 2  | $0800     ; ------ 
+        ; %0011 | 3  | $0C00     ;      |           
+        ; %0100 | 4  | $1000     ;      |   
+        ; %0101 | 5  | $1400     ;      |           
+        ; %0110 | 6  | $1800     ;      |   
+        ; %0111 | 7  | $1C00     ;      |
+        ; %1000 | 8  | $2000     ;      |
+        ; %1001 | 9  | $2400     ;      |   
+        ; %1010 | 10 | $2800     ;      |   
+        ; %1011 | 11 | $2C00     ;      |           
+        ; %1100 | 12 | $3000     ;      |   
+        ; %1101 | 13 | $3400     ;      |           
+        ; %1110 | 14 | $3800     ;      |   
+        ; %1111 | 15 | $3C00     ;      |
+                                 ;      |
+                                 ;      |
+        lda $d018                ;      |
+        ;bit  76543210           ;      |
+        and #%11111111           ;      | 
+        ora #%00100000           ;  <---- bits 7-4   ==> $4800
         sta $d018
-        jsr clear
-        jsr clear_hires_color
-
-        ldx #7                             ;Schleifenzähler
-        lda #$ff                           ;Pixelmuster
-.loop
-        sta VIC_BITMAP_ADR,X               ;Pixel ausgeben
-        lsr                                ;Muster im Akku ändern
-        dex                                ;Schleifenzähler verringern
-        bpl .loop                          ;solange positiv nochmal -> .loop
-        
-
-        lda #$23
-        sta VIC_SCREEN_RAM
         jmp *
 
-
-
-; --------------------------------------------------------------------------
-;  Clear screen
-; --------------------------------------------------------------------------
-!zone clear
-clear
-        lda #<VIC_BITMAP_ADR               ;auf die Zero-Page  --> das HIGHBYTE
-        sta ZP_HELP_ADR       
-        lda #>VIC_BITMAP_ADR               ;                   --> das LOWBYTE
-        sta ZP_HELP_ADR+1
-        
-        ldx #32                            ;Schleifenzähler 32 Pages (32 * 256 = 8192 = 8KB)
-        ldy #0                             ;Schleifenzähler für 256 BYTES je Page
-        
-        lda #$00                           ;Akku auf 0 setzen
-.loop   sta (ZP_HELP_ADR),Y                ;Akku 'ausgeben'
-        dey                                ;Y verringern
-        bne .loop                          ;solange größer 0 nochmal -> .loop
-        inc ZP_HELP_ADR+1                  ;Adresse auf der Zeropage um eine Page erhöhen
-        dex                                ;Pagezähler verringern
-        bne .loop                          ;solange größer 0 nochmal -> .loop
-        rts  
-
-!zone clear_hires_color
-clear_hires_color
-        ldx #0                             ;Schleifenzähler 256 BYTES
-        lda #$0F 
-.loop   sta VIC_SCREEN_RAM,X               ;1. Page des Bildschirmspeichers
-        sta VIC_SCREEN_RAM+256,X           ;2. Page
-        sta VIC_SCREEN_RAM+512,X           ;3. Page
-        sta VIC_SCREEN_RAM+768,X           ;4. Page
-        dex                                ;Schleifenzähler verringern
-        bne .loop                          ;solange nicht 0 nochmal -> .loop
-        rts                                ;zurück zum Aufrufe
-   
+      
