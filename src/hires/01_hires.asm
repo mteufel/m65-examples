@@ -1,14 +1,23 @@
 !cpu m65
-!to "./build/hires.prg", cbm
-!src "src/includes/m65macros.asm"
+!to "./build/01_hires.prg", cbm
+!src "./src/includes/m65-macros.asm"
 
+        ; ************************************************************************************************
+        ; *                                                                                              *
+        ; * hires.asm                                                                                    *
+        ; *                                                                                              *
+        ; * brings some hires pixels to the screen                                                       *
+        ; *                                                                                              *
+        ; * ./build.sh hires 01_hires                                                                       *
+        ; *                                                                                              *        
+        ; *                                                                                              *
+        ; ************************************************************************************************
 
 ZP_HELP_ADR               = $fb
 VIC_BITMAP_ADR            = $6000
 VIC_SCREEN_RAM            = $4800
 
         +basicStarter
-
 
         ; =================================================================================================
         ; Start

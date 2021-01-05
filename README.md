@@ -1,3 +1,18 @@
+**05-01-2021**
+
+Completely re-structured the project. All files have a numbered prefix now, you should try and learn in this order.
+I also sorted my examples now in to three areas: simple, hires and mcm. A new area fcm for Full Color Mode grafics 
+is in the work and will come soon!
+
+simple:
+There's a new example which show how to set a custom color palette and even more important how to calculate the RGB-Values correctly.
+Another example in this areas shows in detail and in easy steps how to map memory and how to calculate the values for the registers. Check it out!
+
+hires+mcm:
+Areas for Hires and Multicolor-Bitmap graphic modes. Including some sample grafics pixeled with my other project "Just Pixel". The examples run only on the MEGA65 because I already included custom color palettes.
+
+
+
 **20-12-2020**
 
 Examples for Hires and Multicolor Bitmaps in 65 Mode.
